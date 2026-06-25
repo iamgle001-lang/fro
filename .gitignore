@@ -1,0 +1,7 @@
+.gradle/
+build/
+*.mpp
+*.jar
+!gradle/wrapper/gradle-wrapper.jar
+.idea/
+local.properties

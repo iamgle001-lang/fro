@@ -1,0 +1,69 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  packages: read
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build patches
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./gradlew build
+
+      - name: Get version
+        id: version
+        run: echo "version=$(grep '^version=' gradle.properties | cut -d= -f2)" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.version.outputs.version }}
+          name: v${{ steps.version.outputs.version }}
+          files: |
+            patches/build/libs/patches-${{ steps.version.outputs.version }}.mpp
+            patches/build/libs/patches-${{ steps.version.outputs.version }}.mpp.asc
+
+      - name: Update patches-bundle.json
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          REPO="${{ github.repository }}"
+          cat > patches-bundle.json << EOF
+          {
+            "version": "${VERSION}",
+            "created_at": "$(date -u +%Y-%m-%dT%H:%M:%S)",
+            "description": "SSL Pinning Bypass patch for fromm (com.knowmerce.fromm.fan)",
+            "download_url": "https://github.com/${REPO}/releases/download/v${VERSION}/patches-${VERSION}.mpp",
+            "signature_download_url": "https://github.com/${REPO}/releases/download/v${VERSION}/patches-${VERSION}.mpp.asc"
+          }
+          EOF
+
+      - name: Commit patches-bundle.json
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add patches-bundle.json
+          git diff --staged --quiet || git commit -m "chore: update patches-bundle.json for v${{ steps.version.outputs.version }}"
+          git push
