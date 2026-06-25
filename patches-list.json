@@ -96,6 +96,18 @@
         }
       ],
       "options": []
+    },
+    {
+      "name": "Show actual message count",
+      "description": "Shows the real unread/message count instead of capping the display at 99+.",
+      "default": false,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "com.knowmerce.fromm.fan"
+        }
+      ],
+      "options": []
     }
   ]
 }
