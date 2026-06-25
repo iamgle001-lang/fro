@@ -63,17 +63,21 @@ jobs:
           files: |
             patches/build/libs/patches-${{ steps.version.outputs.version }}.mpp
 
-      - name: Update patches-bundle.json
+      - name: Commit patches to repo and update bundle JSON
         run: |
           VERSION="${{ steps.version.outputs.version }}"
           REPO="${{ github.repository }}"
-          printf '{\n  "version": "%s",\n  "created_at": "%s",\n  "description": "Patches for fromm fan app (com.knowmerce.fromm.fan)",\n  "download_url": "https://github.com/%s/releases/download/v%s/patches-%s.mpp"\n}\n' \
-            "${VERSION}" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "${REPO}" "${VERSION}" "${VERSION}" > patches-bundle.json
+          MPP="patches/build/libs/patches-${VERSION}.mpp"
 
-      - name: Commit patches-bundle.json
-        run: |
+          # Copy .mpp into repo root for redirect-free raw download
+          cp "$MPP" patches-latest.mpp
+
+          # Update patches-bundle.json to use raw GitHub URL (no redirect)
+          printf '{\n  "version": "%s",\n  "created_at": "%s",\n  "description": "Patches for fromm fan app (com.knowmerce.fromm.fan)",\n  "download_url": "https://raw.githubusercontent.com/%s/main/patches-latest.mpp"\n}\n' \
+            "${VERSION}" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "${REPO}" > patches-bundle.json
+
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add patches-bundle.json
-          git diff --staged --quiet || git commit -m "chore: update patches-bundle.json for v${{ steps.version.outputs.version }}"
+          git add patches-bundle.json patches-latest.mpp
+          git diff --staged --quiet || git commit -m "chore: update patches-bundle.json and patches-latest.mpp for v${VERSION}"
           git push
