@@ -6,6 +6,7 @@ import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patches.fromm.util.InstructionHelper
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.BuilderInstruction
+import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction21c
 import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
 
 private val checkAvailabilityFingerprint = fingerprint {
@@ -29,21 +30,24 @@ val forceUpdateBypassPatch = bytecodePatch(
         val method = checkAvailabilityFingerprint.match().method
         val instructions = InstructionHelper.getInstructions(method)
 
-        val forceReturnIdx = instructions.indexOfFirst { instr: BuilderInstruction ->
+        val forceUpdateInstr = instructions.firstOrNull { instr: BuilderInstruction ->
             instr.opcode == Opcode.SGET_OBJECT &&
                 (instr as? ReferenceInstruction)?.reference?.toString()?.contains("usecases/common/f;->a:") == true
-        }
-        if (forceReturnIdx == -1) throw PatchException("ForceUpdateRequired sget not found")
+        } as? BuilderInstruction21c
+            ?: throw PatchException("ForceUpdateRequired sget not found")
 
-        val successIdx = instructions.indexOfLast { instr: BuilderInstruction ->
+        val successInstr = instructions.lastOrNull { instr: BuilderInstruction ->
             instr.opcode == Opcode.SGET_OBJECT &&
                 (instr as? ReferenceInstruction)?.reference?.toString()?.contains("usecases/common/g;->a:") == true
-        }
-        if (successIdx == -1) throw PatchException("Success sget not found")
+        } as? BuilderInstruction21c
+            ?: throw PatchException("Success sget not found")
 
-        InstructionHelper.replaceInstruction(method, forceReturnIdx, "nop")
-        InstructionHelper.replaceInstruction(method, forceReturnIdx + 1, "nop")
-        val jumpOffset = successIdx - forceReturnIdx
-        InstructionHelper.addInstruction(method, forceReturnIdx, "goto/16 +$jumpOffset")
+        val forceReturnIdx = instructions.indexOf(forceUpdateInstr)
+        val destReg = forceUpdateInstr.registerA
+        val successRef = successInstr.reference.toString()
+
+        // Replace the ForceUpdateRequired SGET with the Success SGET using the same register.
+        // No goto needed — the downstream code will continue with the Success value.
+        InstructionHelper.replaceInstruction(method, forceReturnIdx, "sget-object v$destReg, $successRef")
     }
 }
