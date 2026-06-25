@@ -37,6 +37,24 @@ jobs:
         id: version
         run: echo "version=$(grep '^version=' gradle.properties | cut -d= -f2)" >> $GITHUB_OUTPUT
 
+      - name: Add DEX to patches
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          MPP="patches/build/libs/patches-${VERSION}.mpp"
+          BT=$(ls "${ANDROID_HOME}/build-tools" | sort -V | tail -1)
+          D8="${ANDROID_HOME}/build-tools/${BT}/d8"
+          echo "Using d8 from Build Tools ${BT}"
+          mkdir -p /tmp/patch_classes /tmp/patch_dex
+          unzip -o "$MPP" "*.class" -d /tmp/patch_classes
+          JARS=$(find ~/.gradle/caches -name "*.jar" 2>/dev/null | grep -E "patcher|smali|morphe" | head -10)
+          CLASSPATH_ARGS=""
+          for jar in $JARS; do CLASSPATH_ARGS="$CLASSPATH_ARGS --classpath $jar"; done
+          CLASS_FILES=$(find /tmp/patch_classes -name "*.class")
+          "$D8" --output /tmp/patch_dex --min-api 26 $CLASSPATH_ARGS $CLASS_FILES 2>/dev/null || \
+          "$D8" --output /tmp/patch_dex --min-api 26 $CLASS_FILES 2>/dev/null
+          zip "$MPP" -j /tmp/patch_dex/classes.dex
+          echo "Added classes.dex to $MPP"
+
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
