@@ -91,6 +91,22 @@ private val isDeletedGetterFingerprint = fingerprint {
     }
 }
 
+// ── Patch D2: deletedAt property accessor (fallback) ─────────────────────
+// If R8 inlines isDeleted() into callers, patching the underlying Long?
+// accessor makes every surviving null-check on deletedAt see null.
+// Also handles ViewModels that read deletedAt directly without isDeleted().
+private val deletedAtGetterFingerprint = fingerprint {
+    returns("Ljava/lang/Long;")
+    custom { method, _ ->
+        method.parameterTypes.isEmpty() &&
+            (method.implementation?.instructions?.count() ?: 0) <= 5 &&
+            method.implementation?.instructions?.any { instr ->
+                instr is ReferenceInstruction &&
+                    instr.reference.toString().contains("->deletedAt:Ljava/lang/Long;")
+            } == true
+    }
+}
+
 // ─────────────────────────────────────────────────────────────────────────
 
 @Suppress("unused")
@@ -185,5 +201,20 @@ val showDeletedMessagesPatch = bytecodePatch(
                 """.trimIndent(),
             )
         } catch (_: Exception) { /* getter not found or already inlined */ }
+
+        // ── Patch D2: deletedAt accessor → always null ───────────────────
+        // Belt-and-suspenders: ensures any code that reads deletedAt
+        // (inlined or not) sees null → treats message as not deleted.
+        try {
+            val deletedAtMethod = deletedAtGetterFingerprint.match().method
+            InstructionHelper.replaceInstructions(
+                deletedAtMethod,
+                0,
+                """
+                const/4 v0, 0x0
+                return-object v0
+                """.trimIndent(),
+            )
+        } catch (_: Exception) { /* getter not found or inlined */ }
     }
 }
