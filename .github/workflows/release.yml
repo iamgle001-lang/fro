@@ -67,15 +67,8 @@ jobs:
         run: |
           VERSION="${{ steps.version.outputs.version }}"
           REPO="${{ github.repository }}"
-          cat > patches-bundle.json << EOF
-          {
-            "version": "${VERSION}",
-            "created_at": "$(date -u +%Y-%m-%dT%H:%M:%S)",
-            "description": "SSL Pinning Bypass patch for fromm (com.knowmerce.fromm.fan)",
-            "download_url": "https://github.com/${REPO}/releases/download/v${VERSION}/patches-${VERSION}.mpp",
-            "signature_download_url": ""
-          }
-          EOF
+          printf '{\n  "version": "%s",\n  "created_at": "%s",\n  "description": "Patches for fromm fan app (com.knowmerce.fromm.fan)",\n  "download_url": "https://github.com/%s/releases/download/v%s/patches-%s.mpp"\n}\n' \
+            "${VERSION}" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "${REPO}" "${VERSION}" "${VERSION}" > patches-bundle.json
 
       - name: Commit patches-bundle.json
         run: |
