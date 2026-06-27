@@ -3,6 +3,7 @@ package app.morphe.patches.fromm.settings.version
 import app.morphe.patcher.fingerprint
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patches.fromm.PATCH_VERSION
 import app.morphe.patches.fromm.util.InstructionHelper
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction22c
 import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
@@ -62,7 +63,7 @@ val showPatchInfoPatch = bytecodePatch(
             method,
             idx + 1,
             """
-            const-string v$tempReg, "\n모르페 패치 v1.1.9 적용됨"
+            const-string v$tempReg, "\n모르페 패치 v$PATCH_VERSION 적용됨"
             invoke-virtual {v$destReg, v$tempReg}, Ljava/lang/String;->concat(Ljava/lang/String;)Ljava/lang/String;
             move-result-object v$destReg
             """.trimIndent(),
