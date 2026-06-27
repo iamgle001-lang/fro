@@ -1,5 +1,5 @@
 {
-  "version": "1.1.9",
+  "version": "1.2.0",
   "patches": [
     {
       "name": "삭제된 메시지 표시",
@@ -40,6 +40,18 @@
     {
       "name": "숨겨진 메시지 표시",
       "description": "서버에 의해 숨겨진 메시지를 채팅방에 표시합니다.",
+      "default": false,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "com.knowmerce.fromm.fan"
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "패치 정보 표시",
+      "description": "설정 > 버전 정보 화면에 적용된 모르페 패치 버전을 표시합니다.",
       "default": false,
       "dependencies": [],
       "compatiblePackages": [
