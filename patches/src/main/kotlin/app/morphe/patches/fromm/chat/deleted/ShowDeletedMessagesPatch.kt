@@ -146,20 +146,25 @@ val showDeletedMessagesPatch = bytecodePatch(
         }
 
         // ── Patch A: UPDATE query — keep content/thumbnail ──────────────
-        val deleteMethod = deleteQueryFingerprint.match().method
-        val deleteInstrs = InstructionHelper.getInstructions(deleteMethod)
-        val updateIdx = deleteInstrs.indexOfFirst { instr: BuilderInstruction ->
-            instr.opcode == Opcode.CONST_STRING &&
-                (instr as? ReferenceInstruction)?.reference?.toString()
-                    ?.contains("UPDATE message SET deletedAt = ?, content") == true
-        }
-        if (updateIdx == -1) throw PatchException("UPDATE query string not found")
-        val updateReg = (deleteInstrs[updateIdx] as? BuilderInstruction21c)?.registerA ?: 0
-        InstructionHelper.replaceInstruction(
-            deleteMethod,
-            updateIdx,
-            "const-string v$updateReg, \"UPDATE message SET deletedAt = ? WHERE hostChatRoomId = ? AND id = ?\"",
-        )
+        // Wrapped in try/catch: PreserveDeletedContentPatch may have already
+        // replaced this SQL, in which case the fingerprint won't match.
+        try {
+            val deleteMethod = deleteQueryFingerprint.match().method
+            val deleteInstrs = InstructionHelper.getInstructions(deleteMethod)
+            val updateIdx = deleteInstrs.indexOfFirst { instr: BuilderInstruction ->
+                instr.opcode == Opcode.CONST_STRING &&
+                    (instr as? ReferenceInstruction)?.reference?.toString()
+                        ?.contains("UPDATE message SET deletedAt = ?, content") == true
+            }
+            if (updateIdx != -1) {
+                val updateReg = (deleteInstrs[updateIdx] as? BuilderInstruction21c)?.registerA ?: 0
+                InstructionHelper.replaceInstruction(
+                    deleteMethod,
+                    updateIdx,
+                    "const-string v$updateReg, \"UPDATE message SET deletedAt = ? WHERE hostChatRoomId = ? AND id = ?\"",
+                )
+            }
+        } catch (_: Exception) { /* already patched by PreserveDeletedContentPatch */ }
 
         // ── Patch B: remove deletedAt filter from all SELECT queries ────
         removeDeletedAtFilter(selectQueryFingerprint.match().method)
