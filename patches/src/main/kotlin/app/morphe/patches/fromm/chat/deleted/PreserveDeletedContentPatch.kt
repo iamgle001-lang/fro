@@ -9,9 +9,11 @@ import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
 
 // Targets the SharedSQLiteStatement inner class that holds the
 // "UPDATE message SET deletedAt = ?, content = '', thumbnail = ''" SQL.
+// The inner class number ($4, $5, $6 …) can vary across APK versions,
+// so we match any inner class of MessageDao_Impl that owns the target SQL.
 private val updateDeletedFp = fingerprint {
     custom { method, classDef ->
-        classDef.type == "Lcom/knowmerce/fromm/data/datasource/db/dao/fan/MessageDao_Impl\$5;" &&
+        classDef.type.startsWith("Lcom/knowmerce/fromm/data/datasource/db/dao/fan/MessageDao_Impl") &&
             method.implementation?.instructions?.any { instr ->
                 instr is ReferenceInstruction &&
                     instr.reference.toString().contains("content = ''")
@@ -41,7 +43,7 @@ val preserveDeletedContentPatch = bytecodePatch(
         InstructionHelper.replaceInstruction(
             method,
             idx,
-            "const-string v$reg, \"UPDATE message SET deletedAt = ? WHERE hostChatRoomId = ? AND id = ?\"",
+            "const-string v$reg, \"UPDATE message SET deletedAt = ?, content = '[삭제됨] ' || COALESCE(content, '') WHERE hostChatRoomId = ? AND id = ?\"",
         )
     }
 }
