@@ -60,3 +60,8 @@ patches {
         license = "GNU General Public License v3.0"
     }
 }
+
+// ── Fix sourcesJar dependency ──────────────────────────────────────────────
+tasks.matching { it.name == "sourcesJar" }.configureEach {
+    dependsOn(generateVersionKt)
+}
