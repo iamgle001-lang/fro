@@ -1,9 +1,5 @@
 {
-<<<<<<< Updated upstream
-  "version": "1.2.23",
-=======
   "version": "1.2.37",
->>>>>>> Stashed changes
   "patches": [
     {
       "name": "삭제된 메시지 표시",
