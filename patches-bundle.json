@@ -1,6 +1,11 @@
 {
+<<<<<<< Updated upstream
   "version": "1.2.23",
   "created_at": "2026-06-29T01:51:59Z",
+=======
+  "version": "1.2.37",
+  "created_at": "2026-06-28T13:00:00Z",
+>>>>>>> Stashed changes
   "description": "Patches for fromm fan app (com.knowmerce.fromm.fan)",
   "download_url": "https://raw.githubusercontent.com/iamgle001-lang/fro/main/patches-latest.mpp"
 }
