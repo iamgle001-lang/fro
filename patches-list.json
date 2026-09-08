@@ -1,5 +1,5 @@
 {
-  "version": "1.2.23",
+  "version": "1.2.24",
   "patches": [
     {
       "name": "삭제된 메시지 표시",
@@ -64,6 +64,90 @@
     {
       "name": "패치 정보 표시",
       "description": "설정 > 버전 정보 화면에 적용된 모르페 패치 버전을 표시합니다.",
+      "default": false,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "com.knowmerce.fromm.fan"
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "매니페스트 수정",
+      "description": "백업 허용(allowBackup=true) 및 모든 Activity를 외부 앱에서 실행 가능하도록 설정합니다.",
+      "default": false,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "com.knowmerce.fromm.fan"
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "라이브 자동 가로모드",
+      "description": "라이브 시청 화면 진입 시 자동으로 가로 방향으로 전환합니다.",
+      "default": false,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "com.knowmerce.fromm.fan"
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "라이브 UI 요소 제거",
+      "description": "라이브 시청 화면에서 채팅창, 하트 애니메이션, 타이틀을 제거합니다.",
+      "default": false,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "com.knowmerce.fromm.fan"
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "라이브 자동 입장",
+      "description": "채팅방 입장 시 라이브가 진행 중이면 자동으로 라이브 시청 화면으로 이동합니다.",
+      "default": false,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "com.knowmerce.fromm.fan"
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "라이브 종료 알림",
+      "description": "라이브 방송이 종료될 때 로컬 알림을 표시합니다.",
+      "default": false,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "com.knowmerce.fromm.fan"
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "유저 프로필 로그",
+      "description": "/v2/user/fan/profile 응답에서 userId·nick을 logcat(태그: FROMM_PROFILE) 출력 및 SharedPreferences(fromm_profile)에 저장합니다.",
+      "default": false,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "com.knowmerce.fromm.fan"
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "키워드 알림",
+      "description": "특정 키워드가 포함된 채팅 메시지 수신 시 알림을 표시합니다. 앱 알림에서 키워드를 추가/삭제할 수 있습니다.",
       "default": false,
       "dependencies": [],
       "compatiblePackages": [
