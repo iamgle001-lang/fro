@@ -1,5 +1,5 @@
 {
-  "version": "1.2.23",
+  "version": "1.1.0",
   "patches": [
     {
       "name": "삭제된 메시지 표시",
@@ -17,6 +17,18 @@
       "name": "삭제 메시지 내용 보존",
       "description": "메시지가 삭제될 때 내용을 지우지 않고 보존합니다. '삭제된 메시지 표시' 패치와 함께 사용하세요.",
       "default": false,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "com.knowmerce.fromm.fan"
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "매니페스트 수정",
+      "description": "extractNativeLibs=true(설치 오류 방지), allowBackup=true, 모든 Activity 외부 실행 허용을 AndroidManifest.xml에 적용합니다.",
+      "default": true,
       "dependencies": [],
       "compatiblePackages": [
         {
@@ -64,18 +76,6 @@
     {
       "name": "패치 정보 표시",
       "description": "설정 > 버전 정보 화면에 적용된 모르페 패치 버전을 표시합니다.",
-      "default": false,
-      "dependencies": [],
-      "compatiblePackages": [
-        {
-          "packageName": "com.knowmerce.fromm.fan"
-        }
-      ],
-      "options": []
-    },
-    {
-      "name": "매니페스트 수정",
-      "description": "백업 허용(allowBackup=true) 및 모든 Activity를 외부 앱에서 실행 가능하도록 설정합니다.",
       "default": false,
       "dependencies": [],
       "compatiblePackages": [
@@ -153,6 +153,90 @@
       "compatiblePackages": [
         {
           "packageName": "com.knowmerce.fromm.fan"
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "강제 업데이트 우회",
+      "description": "서버의 최소 버전 코드 요구를 무시하여 강제 업데이트 다이얼로그를 제거합니다.",
+      "default": false,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "com.dearu.bubble.stars"
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "SSL 핀닝 우회",
+      "description": "BKS 키스토어 기반 SSL 인증서 핀닝을 우회합니다. mitmproxy 사용 시 '매니페스트 수정' 패치와 함께 적용하세요.",
+      "default": false,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "com.dearu.bubble.stars"
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "매니페스트 수정",
+      "description": "user CA 인증서 신뢰(mitmproxy 등), cleartext 허용, allowBackup=true를 AndroidManifest.xml에 적용합니다.",
+      "default": false,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "com.dearu.bubble.stars"
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "DFA 광고 일시정지 제거",
+      "description": "일정 시간 재생 후 뜨는 '광고 확인 후 음악이 재생됩니다' 팝업과 재생 중단을 제거합니다.",
+      "default": false,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "com.iloen.melon"
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "캐시 자동 삭제",
+      "description": "앱 재개 시 마지막 캐시 삭제로부터 1시간이 경과했으면 이미지 캐시 및 앱 캐시 디렉토리를 자동으로 삭제합니다.",
+      "default": false,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "com.iloen.melon"
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "광고 제거",
+      "description": "Kakao Trevi 배너 광고 뷰를 숨기고, CashFriends 전체화면/동영상 광고 액티비티를 즉시 종료합니다.",
+      "default": false,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "com.iloen.melon"
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "공지 팝업 제거",
+      "description": "앱 실행 시 표시되는 서버 공지 팝업(예: '지금 듣고계신 음악을 계속 들으시겠습니까?')을 제거합니다.",
+      "default": false,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "com.iloen.melon"
         }
       ],
       "options": []
