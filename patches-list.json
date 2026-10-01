@@ -1,5 +1,5 @@
 {
-  "version": "1.2.23",
+  "version": "1.1.0",
   "patches": [
     {
       "name": "삭제된 메시지 표시",
@@ -148,6 +148,30 @@
     {
       "name": "키워드 알림",
       "description": "특정 키워드가 포함된 채팅 메시지 수신 시 알림을 표시합니다. 앱 알림에서 키워드를 추가/삭제할 수 있습니다.",
+      "default": false,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "com.knowmerce.fromm.fan"
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "PairIP 우회",
+      "description": "pairipcore.so 로드 및 Play Store 라이선스 검사를 차단하여 'Play Store에서 다운로드' 팝업을 제거합니다.",
+      "default": false,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "com.knowmerce.fromm.fan"
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "강제 업데이트 우회",
+      "description": "서버의 최소 버전 코드 요구를 무시하여 강제 업데이트 다이얼로그를 제거합니다.",
       "default": false,
       "dependencies": [],
       "compatiblePackages": [
