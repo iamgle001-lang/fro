@@ -1,5 +1,5 @@
 {
-  "version": "1.2.23",
+  "version": "1.2.24",
   "patches": [
     {
       "name": "삭제된 메시지 표시",
@@ -159,7 +159,7 @@
     },
     {
       "name": "PairIP 우회",
-      "description": "pairipcore.so 로드 및 Play Store 라이선스 검사를 차단하여 'Play Store에서 다운로드' 팝업을 제거합니다.",
+      "description": "Play Store 라이선스 검사를 차단하여 'Play Store에서 다운로드' 팝업을 제거합니다.",
       "default": false,
       "dependencies": [],
       "compatiblePackages": [
@@ -195,8 +195,8 @@
     },
     {
       "name": "SSL 핀닝 우회",
-      "description": "BKS 키스토어 기반 SSL 인증서 핀닝을 우회합니다. mitmproxy 사용 시 '매니페스트 수정' 패치와 함께 적용하세요.",
-      "default": false,
+      "description": "BKS 키스토어 기반 MQTT SSL 인증서 핀닝을 우회합니다. 대화방 입장 및 mitmproxy 사용에 필요합니다.",
+      "default": true,
       "dependencies": [],
       "compatiblePackages": [
         {
@@ -208,7 +208,7 @@
     {
       "name": "매니페스트 수정",
       "description": "user CA 인증서 신뢰(mitmproxy 등), cleartext 허용, allowBackup=true를 AndroidManifest.xml에 적용합니다.",
-      "default": false,
+      "default": true,
       "dependencies": [],
       "compatiblePackages": [
         {
